@@ -1,10 +1,7 @@
 package com.alicp.jetcache.anno.field;
 
 import com.alicp.jetcache.*;
-import com.alicp.jetcache.anno.CacheConsts;
-import com.alicp.jetcache.anno.CachePenetrationProtect;
-import com.alicp.jetcache.anno.CacheRefresh;
-import com.alicp.jetcache.anno.CreateCache;
+import com.alicp.jetcache.anno.*;
 import com.alicp.jetcache.anno.method.CacheConfigUtil;
 import com.alicp.jetcache.anno.support.*;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -75,7 +72,12 @@ class LazyInitCache implements ProxyCache {
         cac.setTimeUnit(ann.timeUnit());
         cac.setExpire(ann.expire());
         cac.setLocalExpire(ann.localExpire());
-        cac.setCacheType(ann.cacheType());
+        //默认类型
+        if (ann.cacheType() == CacheType.NONE) {
+            cac.setCacheType(globalCacheConfig.getCacheType());
+        } else {
+            cac.setCacheType(ann.cacheType());
+        }
         cac.setLocalLimit(ann.localLimit());
         cac.setSerialPolicy(ann.serialPolicy());
         cac.setKeyConvertor(ann.keyConvertor());

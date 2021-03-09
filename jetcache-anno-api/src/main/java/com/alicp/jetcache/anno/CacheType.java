@@ -7,5 +7,8 @@ package com.alicp.jetcache.anno;
  * @author <a href="mailto:areyouok@gmail.com">huangli</a>
  */
 public enum CacheType {
-    REMOTE, LOCAL, BOTH
+    NONE,
+    REMOTE,
+    LOCAL,
+    BOTH
 }

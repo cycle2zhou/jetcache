@@ -3,10 +3,12 @@
  */
 package com.alicp.jetcache.anno.aop;
 
+import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.support.ConfigMap;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author <a href="mailto:areyouok@gmail.com">huangli</a>
@@ -14,9 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CacheAdvisor extends AbstractBeanFactoryPointcutAdvisor {
 
     public static final String CACHE_ADVISOR_BEAN_NAME = "jetcache2.internalCacheAdvisor";
+    private static final long serialVersionUID = -7054776058605212966L;
 
     @Autowired
     private ConfigMap cacheConfigMap;
+
+    @Value("${jetcache.cacheType:REMOTE}")
+    private CacheType globalCacheType;
 
     private String[] basePackages;
 
@@ -24,6 +30,7 @@ public class CacheAdvisor extends AbstractBeanFactoryPointcutAdvisor {
     public Pointcut getPointcut() {
         CachePointcut pointcut = new CachePointcut(basePackages);
         pointcut.setCacheConfigMap(cacheConfigMap);
+        pointcut.setGlobalCacheType(globalCacheType);
         return pointcut;
     }
 

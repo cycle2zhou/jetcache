@@ -19,11 +19,11 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnMissingBean(GlobalCacheConfig.class)
 @EnableConfigurationProperties(JetCacheProperties.class)
 @Import({RedisAutoConfiguration.class,
-        CaffeineAutoConfiguration.class,
-        MockRemoteCacheAutoConfiguration.class,
-        LinkedHashMapAutoConfiguration.class,
-        RedisLettuceAutoConfiguration.class,
-        RedisSpringDataAutoConfiguration.class})
+         CaffeineAutoConfiguration.class,
+         MockRemoteCacheAutoConfiguration.class,
+         LinkedHashMapAutoConfiguration.class,
+         RedisLettuceAutoConfiguration.class,
+         RedisSpringDataAutoConfiguration.class})
 public class JetCacheAutoConfiguration {
 
     public static final String GLOBAL_CACHE_CONFIG_NAME = "globalCacheConfig";
@@ -46,14 +46,14 @@ public class JetCacheAutoConfiguration {
     }
 
     @Bean
-    public static BeanDependencyManager beanDependencyManager(){
+    public static BeanDependencyManager beanDependencyManager() {
         return new BeanDependencyManager();
     }
 
     @Bean(name = GLOBAL_CACHE_CONFIG_NAME)
     public GlobalCacheConfig globalCacheConfig(SpringConfigProvider configProvider,
-                                                            AutoConfigureBeans autoConfigureBeans,
-                                                            JetCacheProperties props) {
+                                               AutoConfigureBeans autoConfigureBeans,
+                                               JetCacheProperties props) {
         if (_globalCacheConfig != null) {
             return _globalCacheConfig;
         }
@@ -63,6 +63,7 @@ public class JetCacheAutoConfiguration {
         _globalCacheConfig.setAreaInCacheName(props.isAreaInCacheName());
         _globalCacheConfig.setPenetrationProtect(props.isPenetrationProtect());
         _globalCacheConfig.setEnableMethodCache(props.isEnableMethodCache());
+        _globalCacheConfig.setCacheType(props.getCacheType());
         _globalCacheConfig.setLocalCacheBuilders(autoConfigureBeans.getLocalCacheBuilders());
         _globalCacheConfig.setRemoteCacheBuilders(autoConfigureBeans.getRemoteCacheBuilders());
         return _globalCacheConfig;

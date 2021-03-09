@@ -4,6 +4,7 @@
 package com.alicp.jetcache.anno.support;
 
 import com.alicp.jetcache.CacheBuilder;
+import com.alicp.jetcache.anno.CacheType;
 
 import java.util.Map;
 
@@ -17,6 +18,7 @@ public class GlobalCacheConfig {
     private boolean areaInCacheName = true;
     private boolean penetrationProtect = false;
     private boolean enableMethodCache = true;
+    private CacheType cacheType;
 
     private Map<String, CacheBuilder> localCacheBuilders;
     private Map<String, CacheBuilder> remoteCacheBuilders;
@@ -78,5 +80,13 @@ public class GlobalCacheConfig {
 
     public void setEnableMethodCache(boolean enableMethodCache) {
         this.enableMethodCache = enableMethodCache;
+    }
+
+    public CacheType getCacheType() {
+        return cacheType;
+    }
+
+    public void setCacheType(CacheType cacheType) {
+        this.cacheType = cacheType;
     }
 }

@@ -3,6 +3,7 @@
  */
 package com.alicp.jetcache.anno.aop;
 
+import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.method.CacheConfigUtil;
 import com.alicp.jetcache.anno.method.CacheInvokeConfig;
 import com.alicp.jetcache.anno.method.ClassUtil;
@@ -25,6 +26,7 @@ public class CachePointcut extends StaticMethodMatcherPointcut implements ClassF
 
     private ConfigMap cacheConfigMap;
     private String[] basePackages;
+    private CacheType globalCacheType;
 
     public CachePointcut(String[] basePackages) {
         setClassFilter(this);
@@ -100,16 +102,16 @@ public class CachePointcut extends StaticMethodMatcherPointcut implements ClassF
         if (b) {
             if (logger.isDebugEnabled()) {
                 logger.debug("check method match true: method={}, declaringClass={}, targetClass={}",
-                        method.getName(),
-                        ClassUtil.getShortClassName(method.getDeclaringClass().getName()),
-                        targetClass == null ? null : ClassUtil.getShortClassName(targetClass.getName()));
+                             method.getName(),
+                             ClassUtil.getShortClassName(method.getDeclaringClass().getName()),
+                             targetClass == null ? null : ClassUtil.getShortClassName(targetClass.getName()));
             }
         } else {
             if (logger.isTraceEnabled()) {
                 logger.trace("check method match false: method={}, declaringClass={}, targetClass={}",
-                        method.getName(),
-                        ClassUtil.getShortClassName(method.getDeclaringClass().getName()),
-                        targetClass == null ? null : ClassUtil.getShortClassName(targetClass.getName()));
+                             method.getName(),
+                             ClassUtil.getShortClassName(method.getDeclaringClass().getName()),
+                             targetClass == null ? null : ClassUtil.getShortClassName(targetClass.getName()));
             }
         }
         return b;
@@ -130,6 +132,8 @@ public class CachePointcut extends StaticMethodMatcherPointcut implements ClassF
             return true;
         } else {
             cac = new CacheInvokeConfig();
+            //新增一个全局缓存类型
+            cac.setGlobalCacheType(globalCacheType);
             CacheConfigUtil.parse(cac, method);
 
             String name = method.getName();
@@ -137,7 +141,7 @@ public class CachePointcut extends StaticMethodMatcherPointcut implements ClassF
             parseByTargetClass(cac, targetClass, name, paramTypes);
 
             if (!cac.isEnableCacheContext() && cac.getCachedAnnoConfig() == null &&
-                    cac.getInvalidateAnnoConfigs() == null && cac.getUpdateAnnoConfig() == null) {
+                cac.getInvalidateAnnoConfigs() == null && cac.getUpdateAnnoConfig() == null) {
                 cacheConfigMap.putByMethodInfo(key, CacheInvokeConfig.getNoCacheInvokeConfigInstance());
                 return false;
             } else {
@@ -203,5 +207,9 @@ public class CachePointcut extends StaticMethodMatcherPointcut implements ClassF
 
     public void setCacheConfigMap(ConfigMap cacheConfigMap) {
         this.cacheConfigMap = cacheConfigMap;
+    }
+
+    public void setGlobalCacheType(CacheType globalCacheType) {
+        this.globalCacheType = globalCacheType;
     }
 }
