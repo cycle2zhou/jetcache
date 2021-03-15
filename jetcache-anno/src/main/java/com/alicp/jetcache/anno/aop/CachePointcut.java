@@ -3,7 +3,6 @@
  */
 package com.alicp.jetcache.anno.aop;
 
-import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.method.CacheConfigUtil;
 import com.alicp.jetcache.anno.method.CacheInvokeConfig;
 import com.alicp.jetcache.anno.method.ClassUtil;
@@ -26,7 +25,6 @@ public class CachePointcut extends StaticMethodMatcherPointcut implements ClassF
 
     private ConfigMap cacheConfigMap;
     private String[] basePackages;
-    private CacheType globalCacheType;
 
     public CachePointcut(String[] basePackages) {
         setClassFilter(this);
@@ -132,8 +130,6 @@ public class CachePointcut extends StaticMethodMatcherPointcut implements ClassF
             return true;
         } else {
             cac = new CacheInvokeConfig();
-            //新增一个全局缓存类型
-            cac.setGlobalCacheType(globalCacheType);
             CacheConfigUtil.parse(cac, method);
 
             String name = method.getName();
@@ -207,9 +203,5 @@ public class CachePointcut extends StaticMethodMatcherPointcut implements ClassF
 
     public void setCacheConfigMap(ConfigMap cacheConfigMap) {
         this.cacheConfigMap = cacheConfigMap;
-    }
-
-    public void setGlobalCacheType(CacheType globalCacheType) {
-        this.globalCacheType = globalCacheType;
     }
 }

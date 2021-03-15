@@ -2,7 +2,9 @@ package com.alicp.jetcache.autoconfigure;
 
 import com.alicp.jetcache.AbstractCacheBuilder;
 import com.alicp.jetcache.CacheBuilder;
+import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.support.ConfigProvider;
+import com.alicp.jetcache.anno.support.GlobalCacheConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -10,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created on 2016/11/29.
@@ -29,13 +34,15 @@ public abstract class AbstractCacheAutoInit implements InitializingBean {
 
     @Autowired
     protected ConfigProvider configProvider;
+    @Autowired
+    private GlobalCacheConfig globalCacheConfig;
 
     protected String[] typeNames;
 
     private boolean inited = false;
 
     public AbstractCacheAutoInit(String... cacheTypes) {
-        Objects.requireNonNull(cacheTypes,"cacheTypes can't be null");
+        Objects.requireNonNull(cacheTypes, "cacheTypes can't be null");
         Assert.isTrue(cacheTypes.length > 0, "cacheTypes length is 0");
         this.typeNames = cacheTypes;
     }
@@ -67,6 +74,30 @@ public abstract class AbstractCacheAutoInit implements InitializingBean {
             logger.info("init cache area {} , type= {}", cacheArea, typeNames[0]);
             CacheBuilder c = initCache(ct, local ? "local." + cacheArea : "remote." + cacheArea);
             cacheBuilders.put(cacheArea, c);
+
+            /**
+             * 动态设置全局默认缓存类型
+             */
+            CacheType cacheType = globalCacheConfig.getCacheType();
+            switch (cacheType) {
+                case LOCAL:
+                    if (!local) {
+                        globalCacheConfig.setCacheType(CacheType.BOTH);
+                    }
+                    break;
+                case REMOTE:
+                    if (local) {
+                        globalCacheConfig.setCacheType(CacheType.BOTH);
+                    }
+                    break;
+                case NONE:
+                    if (local) {
+                        globalCacheConfig.setCacheType(CacheType.LOCAL);
+                    } else {
+                        globalCacheConfig.setCacheType(CacheType.REMOTE);
+                    }
+                    break;
+            }
         }
     }
 

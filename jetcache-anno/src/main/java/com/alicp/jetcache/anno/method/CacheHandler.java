@@ -4,6 +4,7 @@
 package com.alicp.jetcache.anno.method;
 
 import com.alicp.jetcache.*;
+import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.support.*;
 import com.alicp.jetcache.event.CacheLoadEvent;
 import org.slf4j.Logger;
@@ -219,6 +220,10 @@ public class CacheHandler implements InvocationHandler {
         CacheInvokeConfig cic = context.getCacheInvokeConfig();
         CachedAnnoConfig cac = cic.getCachedAnnoConfig();
         Cache cache = context.getCacheFunction().apply(context, cac);
+        if (cac.getCacheType() == CacheType.NONE) {
+            logger.warn("Cache not configured");
+            return invokeOrigin(context);
+        }
         if (cache == null) {
             logger.error("no cache with name: " + context.getMethod());
             return invokeOrigin(context);

@@ -3,7 +3,6 @@
  */
 package com.alicp.jetcache.anno.method;
 
-import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.support.CacheInvalidateAnnoConfig;
 import com.alicp.jetcache.anno.support.CacheUpdateAnnoConfig;
 import com.alicp.jetcache.anno.support.CachedAnnoConfig;
@@ -18,10 +17,6 @@ public class CacheInvokeConfig {
     private List<CacheInvalidateAnnoConfig> invalidateAnnoConfigs;
     private CacheUpdateAnnoConfig updateAnnoConfig;
     private boolean enableCacheContext;
-    /**
-     * 全局缓存类型
-     */
-    private CacheType globalCacheType;
 
     private static final CacheInvokeConfig noCacheInvokeConfigInstance = new CacheInvokeConfig();
 
@@ -59,13 +54,5 @@ public class CacheInvokeConfig {
 
     public void setUpdateAnnoConfig(CacheUpdateAnnoConfig updateAnnoConfig) {
         this.updateAnnoConfig = updateAnnoConfig;
-    }
-
-    public CacheType getGlobalCacheType() {
-        return globalCacheType;
-    }
-
-    public void setGlobalCacheType(CacheType globalCacheType) {
-        this.globalCacheType = globalCacheType;
     }
 }

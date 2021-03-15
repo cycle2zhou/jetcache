@@ -1,6 +1,5 @@
 package com.alicp.jetcache.autoconfigure;
 
-import com.alicp.jetcache.anno.CacheType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -16,10 +15,6 @@ public class JetCacheProperties {
     private boolean areaInCacheName = true;
     private boolean penetrationProtect = false;
     private boolean enableMethodCache = true;
-    /**
-     * 缓存类型：none(不指定，默认为两级缓存)、local(本地)、remote(远程)、both(两种同时使用)
-     */
-    private CacheType cacheType = CacheType.REMOTE;
 
     public JetCacheProperties() {
     }
@@ -69,13 +64,5 @@ public class JetCacheProperties {
 
     public void setEnableMethodCache(boolean enableMethodCache) {
         this.enableMethodCache = enableMethodCache;
-    }
-
-    public CacheType getCacheType() {
-        return cacheType;
-    }
-
-    public void setCacheType(CacheType cacheType) {
-        this.cacheType = cacheType;
     }
 }

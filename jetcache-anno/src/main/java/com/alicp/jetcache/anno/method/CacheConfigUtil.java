@@ -146,10 +146,6 @@ public class CacheConfigUtil {
         boolean hasAnnotation = false;
         CachedAnnoConfig cachedConfig = parseCached(method);
         if (cachedConfig != null) {
-            //注解上默认没有配置缓存类型，则使用全局缓存类型
-            if (cachedConfig.getCacheType() == CacheType.NONE) {
-                cachedConfig.setCacheType(cac.getGlobalCacheType());
-            }
             cac.setCachedAnnoConfig(cachedConfig);
             hasAnnotation = true;
         }

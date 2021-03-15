@@ -63,7 +63,6 @@ public class JetCacheAutoConfiguration {
         _globalCacheConfig.setAreaInCacheName(props.isAreaInCacheName());
         _globalCacheConfig.setPenetrationProtect(props.isPenetrationProtect());
         _globalCacheConfig.setEnableMethodCache(props.isEnableMethodCache());
-        _globalCacheConfig.setCacheType(props.getCacheType());
         _globalCacheConfig.setLocalCacheBuilders(autoConfigureBeans.getLocalCacheBuilders());
         _globalCacheConfig.setRemoteCacheBuilders(autoConfigureBeans.getRemoteCacheBuilders());
         return _globalCacheConfig;
