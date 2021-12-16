@@ -7,7 +7,6 @@ import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
 import com.alicp.jetcache.anno.config.EnableMethodCache;
 import com.alicp.jetcache.embedded.EmbeddedCacheConfig;
 import com.alicp.jetcache.redis.RedisCacheConfig;
-import com.alicp.jetcache.support.FastjsonKeyConvertor;
 import com.alicp.jetcache.test.beans.MyFactoryBean;
 import com.alicp.jetcache.test.spring.SpringTest;
 import org.junit.Assert;
@@ -22,7 +21,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.util.Pool;
+import redis.clients.jedis.util.Pool;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -68,7 +67,6 @@ public class RedisStarterTest extends SpringTest {
             Assert.assertEquals(200, cc1.getLimit());
             Assert.assertEquals(10000, cc1.getExpireAfterWriteInMillis());
             Assert.assertFalse(cc1.isExpireAfterAccess());
-            Assert.assertSame(FastjsonKeyConvertor.INSTANCE, cc1.getKeyConvertor());
 
             RedisCacheConfig c = (RedisCacheConfig) c2.config();
             Assert.assertFalse(c.isReadFromSlave());

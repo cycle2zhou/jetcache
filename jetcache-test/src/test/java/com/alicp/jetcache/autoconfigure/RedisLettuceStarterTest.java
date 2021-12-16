@@ -4,9 +4,8 @@ import com.alicp.jetcache.Cache;
 import com.alicp.jetcache.anno.CreateCache;
 import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
 import com.alicp.jetcache.anno.config.EnableMethodCache;
-import com.alicp.jetcache.redis.lettuce.RedisLettuceCacheTest;
 import com.alicp.jetcache.redis.lettuce.RedisLettuceCacheConfig;
-import com.alicp.jetcache.support.FastjsonKeyConvertor;
+import com.alicp.jetcache.redis.lettuce.RedisLettuceCacheTest;
 import com.alicp.jetcache.test.beans.MyFactoryBean;
 import com.alicp.jetcache.test.spring.SpringTest;
 import io.lettuce.core.RedisClient;
@@ -93,7 +92,6 @@ public class RedisLettuceStarterTest extends SpringTest {
             Assert.assertNotNull(c1.unwrap(RedisClient.class));
             RedisLettuceCacheConfig cc1 = (RedisLettuceCacheConfig) c1.config();
             Assert.assertEquals(20000, cc1.getExpireAfterWriteInMillis());
-            Assert.assertSame(FastjsonKeyConvertor.INSTANCE, cc1.getKeyConvertor());
 
             a1SlaveCache.put("K1", "V1");
             Thread.sleep(200);

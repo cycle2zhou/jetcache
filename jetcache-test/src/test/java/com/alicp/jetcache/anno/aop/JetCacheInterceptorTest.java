@@ -13,11 +13,12 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Method;
 import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="mailto:areyouok@gmail.com">huangli</a>
@@ -26,22 +27,25 @@ public class JetCacheInterceptorTest {
     private CachePointcut pc;
     private JetCacheInterceptor interceptor;
     private GlobalCacheConfig globalCacheConfig;
+    private ConfigProvider configProvider;
 
     @BeforeEach
     public void setup() {
-        globalCacheConfig = TestUtil.createGloableConfig(new ConfigProvider());
-        globalCacheConfig.init();
+        configProvider = TestUtil.createConfigProvider();
+        globalCacheConfig = configProvider.getGlobalCacheConfig();
+        configProvider.init();
         pc = new CachePointcut(new String[]{"com.alicp.jetcache"});
         ConfigMap map = new ConfigMap();
         pc.setCacheConfigMap(map);
         interceptor = new JetCacheInterceptor();
         interceptor.setCacheConfigMap(map);
-        interceptor.globalCacheConfig = globalCacheConfig;
+        interceptor.configProvider = configProvider;
+
     }
 
     @AfterEach
-    public void stop(){
-        globalCacheConfig.shutdown();
+    public void stop() {
+        configProvider.shutdown();
     }
 
     interface I1 {
@@ -50,6 +54,7 @@ public class JetCacheInterceptorTest {
     }
 
     class C1 implements I1 {
+        @Override
         public int foo() {
             return 0;
         }
@@ -84,6 +89,7 @@ public class JetCacheInterceptorTest {
 
     class C2 implements I2 {
 
+        @Override
         public int foo() {
             return 0;
         }
@@ -124,6 +130,7 @@ public class JetCacheInterceptorTest {
 
     class C3 implements I3 {
 
+        @Override
         public int foo() {
             return 0;
         }

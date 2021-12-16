@@ -8,8 +8,8 @@ import com.alicp.jetcache.embedded.EmbeddedCacheBuilder;
 import com.alicp.jetcache.embedded.EmbeddedCacheConfig;
 import com.alicp.jetcache.embedded.LinkedHashMapCacheBuilder;
 import com.alicp.jetcache.external.ExternalCacheConfig;
-import com.alicp.jetcache.support.*;
 import com.alicp.jetcache.external.MockRemoteCacheBuilder;
+import com.alicp.jetcache.support.*;
 import com.alicp.jetcache.test.beans.MyFactoryBean;
 import org.junit.Assert;
 import org.junit.Test;
@@ -106,12 +106,12 @@ public class ConfigTest implements ApplicationContextAware {
         }
 
         @Bean
-        public GlobalCacheConfig config(SpringConfigProvider configProvider) {
+        public GlobalCacheConfig config() {
             Map localFactories = new HashMap();
             EmbeddedCacheBuilder localFactory = LinkedHashMapCacheBuilder.createLinkedHashMapCacheBuilder()
-                    .limit(20).keyConvertor(FastjsonKeyConvertor.INSTANCE).expireAfterWrite(50, TimeUnit.MILLISECONDS);
+                                                                         .limit(20).keyConvertor(FastjsonKeyConvertor.INSTANCE).expireAfterWrite(50, TimeUnit.MILLISECONDS);
             EmbeddedCacheBuilder localFactory2 = LinkedHashMapCacheBuilder.createLinkedHashMapCacheBuilder()
-                    .limit(10).keyConvertor(FastjsonKeyConvertor.INSTANCE).expireAfterAccess(60, TimeUnit.MILLISECONDS);
+                                                                          .limit(10).keyConvertor(FastjsonKeyConvertor.INSTANCE).expireAfterAccess(60, TimeUnit.MILLISECONDS);
             localFactories.put(CacheConsts.DEFAULT_AREA, localFactory);
             localFactories.put("A1", localFactory2);
 
@@ -135,7 +135,7 @@ public class ConfigTest implements ApplicationContextAware {
             remoteFactories.put("A1", remoteBuilder);
 
             GlobalCacheConfig globalCacheConfig = new GlobalCacheConfig();
-            globalCacheConfig.setConfigProvider(configProvider);
+            //            globalCacheConfig.setConfigProvider(configProvider);
             globalCacheConfig.setLocalCacheBuilders(localFactories);
             globalCacheConfig.setRemoteCacheBuilders(remoteFactories);
 

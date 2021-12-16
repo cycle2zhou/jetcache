@@ -14,8 +14,6 @@ import com.alicp.jetcache.anno.method.CacheInvokeConfig;
 import com.alicp.jetcache.anno.method.CacheInvokeContext;
 import com.alicp.jetcache.embedded.EmbeddedCacheBuilder;
 import com.alicp.jetcache.external.ExternalCacheBuilder;
-import com.alicp.jetcache.support.DefaultCacheMonitor;
-import com.alicp.jetcache.support.DefaultCacheMonitorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,39 +37,12 @@ public class CacheContext {
     private ConfigProvider configProvider;
     private GlobalCacheConfig globalCacheConfig;
 
-    private DefaultCacheMonitorManager defaultCacheMonitorManager;
-    protected SimpleCacheManager cacheManager = SimpleCacheManager.defaultManager;
-    private boolean inited;
+    protected SimpleCacheManager cacheManager;
 
-    public CacheContext(GlobalCacheConfig globalCacheConfig) {
+    public CacheContext(ConfigProvider configProvider, GlobalCacheConfig globalCacheConfig) {
         this.globalCacheConfig = globalCacheConfig;
-        this.configProvider = globalCacheConfig.getConfigProvider();
-    }
-
-    public synchronized void init() {
-        if (!inited) {
-            if (globalCacheConfig.getStatIntervalMinutes() > 0) {
-                defaultCacheMonitorManager = new DefaultCacheMonitorManager(globalCacheConfig.getStatIntervalMinutes(),
-                        TimeUnit.MINUTES, globalCacheConfig.getConfigProvider().statCallback());
-                defaultCacheMonitorManager.start();
-            }
-            inited = true;
-        }
-    }
-
-    public synchronized void shutdown() {
-        if (inited) {
-            if (defaultCacheMonitorManager != null) {
-                defaultCacheMonitorManager.stop();
-            }
-            defaultCacheMonitorManager = null;
-            cacheManager.rebuild();
-            inited = false;
-        }
-    }
-
-    public void setCacheManager(SimpleCacheManager cacheManager) {
-        this.cacheManager = cacheManager;
+        this.configProvider = configProvider;
+        cacheManager = configProvider.getCacheManager();
     }
 
     public CacheInvokeContext createCacheInvokeContext(ConfigMap configMap) {
@@ -153,14 +124,6 @@ public class CacheContext {
             Cache local = buildLocal(cachedAnnoConfig, area);
             Cache remote = buildRemote(cachedAnnoConfig, area, cacheName);
 
-            if (defaultCacheMonitorManager != null) {
-                DefaultCacheMonitor localMonitor = new DefaultCacheMonitor(cacheName + "_local");
-                local.config().getMonitors().add(localMonitor);
-                DefaultCacheMonitor remoteMonitor = new DefaultCacheMonitor(cacheName + "_remote");
-                remote.config().getMonitors().add(remoteMonitor);
-                defaultCacheMonitorManager.add(localMonitor, remoteMonitor);
-            }
-
             boolean useExpireOfSubCache = cachedAnnoConfig.getLocalExpire() > 0;
             cache = MultiLevelCacheBuilder.createMultiLevelCacheBuilder()
                     .expireAfterWrite(remote.config().getExpireAfterWriteInMillis(), TimeUnit.MILLISECONDS)
@@ -179,11 +142,8 @@ public class CacheContext {
             cache.config().setPenetrationProtectTimeout(protectConfig.getPenetrationProtectTimeout());
         }
 
-
-        if (defaultCacheMonitorManager != null) {
-            DefaultCacheMonitor monitor = new DefaultCacheMonitor(cacheName);
-            cache.config().getMonitors().add(monitor);
-            defaultCacheMonitorManager.add(monitor);
+        if (configProvider.getCacheMonitorManager() != null) {
+            configProvider.getCacheMonitorManager().addMonitors(area, cacheName, cache);
         }
         return cache;
     }
@@ -199,8 +159,9 @@ public class CacheContext {
             cacheBuilder.expireAfterWrite(cachedAnnoConfig.getExpire(), cachedAnnoConfig.getTimeUnit());
         }
 
-        if (cacheBuilder.getConfig().getKeyPrefix() != null) {
-            cacheBuilder.setKeyPrefix(cacheBuilder.getConfig().getKeyPrefix() + cacheName);
+        if (cacheBuilder.getConfig().getKeyPrefixSupplier() != null) {
+            Supplier<String> supplier = cacheBuilder.getConfig().getKeyPrefixSupplier();
+            cacheBuilder.setKeyPrefixSupplier(() -> supplier.get() + cacheName);
         } else {
             cacheBuilder.setKeyPrefix(cacheName);
         }

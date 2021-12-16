@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created on 2016/11/29.
@@ -35,7 +38,7 @@ public abstract class AbstractCacheAutoInit implements InitializingBean {
     private boolean inited = false;
 
     public AbstractCacheAutoInit(String... cacheTypes) {
-        Objects.requireNonNull(cacheTypes,"cacheTypes can't be null");
+        Objects.requireNonNull(cacheTypes, "cacheTypes can't be null");
         Assert.isTrue(cacheTypes.length > 0, "cacheTypes length is 0");
         this.typeNames = cacheTypes;
     }
@@ -72,7 +75,7 @@ public abstract class AbstractCacheAutoInit implements InitializingBean {
 
     protected void parseGeneralConfig(CacheBuilder builder, ConfigTree ct) {
         AbstractCacheBuilder acb = (AbstractCacheBuilder) builder;
-        acb.keyConvertor(configProvider.parseKeyConvertor(ct.getProperty("keyConvertor")));
+        acb.keyConvertor(new FunctionWrapper<>(() -> configProvider.parseKeyConvertor(ct.getProperty("keyConvertor"))));
 
         String expireAfterWriteInMillis = ct.getProperty("expireAfterWriteInMillis");
         if (expireAfterWriteInMillis == null) {

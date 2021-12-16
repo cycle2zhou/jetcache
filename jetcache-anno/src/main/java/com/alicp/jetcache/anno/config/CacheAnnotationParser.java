@@ -18,13 +18,12 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * @author <a href="mailto:areyouok@gmail.com">huangli</a>
  */
 public class CacheAnnotationParser implements BeanDefinitionParser {
 
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         doParse(element, parserContext);
         return null;
@@ -56,7 +55,7 @@ public class CacheAnnotationParser implements BeanDefinitionParser {
             parserContext.getRegistry().registerBeanDefinition(CacheAdvisor.CACHE_ADVISOR_BEAN_NAME, advisorDef);
 
             CompositeComponentDefinition compositeDef = new CompositeComponentDefinition(element.getTagName(),
-                    eleSource);
+                                                                                         eleSource);
             compositeDef.addNestedComponent(new BeanComponentDefinition(configMapDef, configMapName));
             compositeDef.addNestedComponent(new BeanComponentDefinition(interceptorDef, interceptorName));
             compositeDef.addNestedComponent(new BeanComponentDefinition(advisorDef, CacheAdvisor.CACHE_ADVISOR_BEAN_NAME));

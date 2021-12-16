@@ -6,7 +6,7 @@
     <groupId>com.alicp.jetcache</groupId>
     <artifactId>jetcache-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.5.16</version>
+    <version>2.6.1</version>
 
     <name>jetcache</name>
     <description>a Java cache abstraction which provides consistent use for various caching solutions</description>
@@ -185,18 +185,36 @@
 
         <module>jetcache-support/jetcache-redis</module>
         <module>jetcache-support/jetcache-redis-lettuce</module>
-        <module>jetcache-support/jetcache-redis-lettuce4</module>
+        <module>jetcache-support/jetcache-redis-springdata</module>
 
         <module>jetcache-starter/jetcache-autoconfigure</module>
         <module>jetcache-starter/jetcache-starter-redis</module>
         <module>jetcache-starter/jetcache-starter-redis-lettuce</module>
-        <module>jetcache-starter/jetcache-starter-redis-lettuce4</module>
+        <module>jetcache-starter/jetcache-starter-redis-springdata</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+
+
+        <spring.framework.version>5.2.4.RELEASE</spring.framework.version>
+        <spring.boot.version>2.2.5.RELEASE</spring.boot.version>
+        <lettuce.version>5.2.2.RELEASE</lettuce.version>
+        <jedis.version>3.1.0</jedis.version>
+
+        <!--
+        <spring.framework.version>5.1.6.RELEASE</spring.framework.version>
+        <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
+        <lettuce.version>5.1.6.RELEASE</lettuce.version>
+        <jedis.version>2.9.3</jedis.version>
+        -->
+
+        <!--
+        <lettuce.version>5.1.6.RELEASE</lettuce.version>
+        <jedis.version>2.9.3</jedis.version>
+        -->
 
         <!--
         <spring.framework.version>5.1.1.RELEASE</spring.framework.version>
@@ -208,8 +226,10 @@
         <spring.boot.version>2.0.0.RELEASE</spring.boot.version>
         -->
 
+        <!--
         <spring.framework.version>4.3.16.RELEASE</spring.framework.version>
         <spring.boot.version>1.5.12.RELEASE</spring.boot.version>
+        -->
 
         <!--
         <spring.framework.version>4.3.5.RELEASE</spring.framework.version>
@@ -276,12 +296,13 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
-                <version>1.2.62</version>
+                <version>1.2.76</version>
             </dependency>
             <dependency>
                 <groupId>org.mvel</groupId>
                 <artifactId>mvel2</artifactId>
-                <version>2.4.0.Final</version>
+                <version>2.4.7.Final</version>
+                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>com.esotericsoftware</groupId>
@@ -291,7 +312,7 @@
             <dependency>
                 <groupId>com.github.ben-manes.caffeine</groupId>
                 <artifactId>caffeine</artifactId>
-                <version>2.6.2</version>
+                <version>2.8.1</version>
             </dependency>
 
             <dependency>

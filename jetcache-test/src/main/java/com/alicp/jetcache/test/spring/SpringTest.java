@@ -6,9 +6,6 @@ import com.alicp.jetcache.test.beans.TestBean;
 import com.alicp.jetcache.test.support.DynamicQuery;
 import com.alicp.jetcache.test.support.DynamicQueryWithEquals;
 import org.junit.Assert;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 /**
  * Created on 2016/11/23.
@@ -54,8 +51,10 @@ public class SpringTest extends SpringTestBase {
 
     }
 
+    @SuppressWarnings("AliAccessStaticViaInstance")
     private void testTestBean(TestBean bean) throws Exception {
         Assert.assertNotEquals(bean.noCacheCount(), bean.noCacheCount());
+        //noinspection AliAccessStaticViaInstance
         Assert.assertEquals(bean.staticCount(), bean.staticCount());
         Assert.assertEquals(bean.count(), bean.count());
         Assert.assertEquals(bean.countWithLocalCache(), bean.countWithLocalCache());
